@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.json.JSONObject;
+import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ public class EmployeeController {
 	}
 	
 	
-	@GetMapping("/read/{id}/emp")
+	@GetMapping(value = "/read/{id}/emp",produces = "application/xml")
 	public ResponseEntity<?> readEmployee(@PathVariable(required = false) Integer id){
 		Employee employee = service.getEmployeeById(id);
 		return new ResponseEntity<Employee>(employee, HttpStatus.FOUND);
@@ -97,4 +99,69 @@ public class EmployeeController {
 		List<Employee> updateMultipleEmployee = service.updateMultipleEmployee(emp);
 		return new ResponseEntity<List<Employee>>(updateMultipleEmployee, HttpStatus.CREATED);
 	}
+	
+	
+	
+	@GetMapping("/get/xml")
+	public ResponseEntity<String> getXml(){
+		String json="{\r\n"
+				+ "      \"id\": 1,\r\n"
+				+ "      \"firstName\": \"d\",\r\n"
+				+ "      \"middleName\": \"Shriram\",\r\n"
+				+ "      \"lastName\": \"Nikam\",\r\n"
+				+ "      \"mobileNum\": \"9876543210\",\r\n"
+				+ "      \"department\": \"IT\",\r\n"
+				+ "      \"age\": 25,\r\n"
+				+ "      \"rank\": 2,\r\n"
+				+ "      \"gender\": \"Male\",\r\n"
+				+ "      \"salary\": 55000.75,\r\n"
+				+ "      \"email\": \"sameer.nikam@example.com\",\r\n"
+				+ "      \"addrs\": {\r\n"
+				+ "        \"village\": \"Hinjewadi\",\r\n"
+				+ "        \"taluka\": \"Mulshi\",\r\n"
+				+ "        \"district\": \"Pune\"\r\n"
+				+ "      },\r\n"
+				+ "      \"username\": \"sameer123\",\r\n"
+				+ "      \"password\": \"securePass@123\",\r\n"
+				+ "      \"confirmPassword\": \"securePass@123\"\r\n"
+				+ "    }";
+		
+		
+		       JSONObject j = new JSONObject(json);
+		         String string = XML.toString(j);
+		         return ResponseEntity.ok(string);
+	}
+	
+	
+	@GetMapping("/get/json")
+	public ResponseEntity<String> getJson(){
+		String xml="<lastName>Nikam</lastName>\r\n"
+				+ "<gender>Male</gender>\r\n"
+				+ "<addrs>\r\n"
+				+ "    <taluka>Mulshi</taluka>\r\n"
+				+ "    <district>Pune</district>\r\n"
+				+ "    <village>Hinjewadi</village>\r\n"
+				+ "</addrs>\r\n"
+				+ "<salary>55000.75</salary>\r\n"
+				+ "<firstName>d</firstName>\r\n"
+				+ "<mobileNum>9876543210</mobileNum>\r\n"
+				+ "<password>securePass@123</password>\r\n"
+				+ "<rank>2</rank>\r\n"
+				+ "<confirmPassword>securePass@123</confirmPassword>\r\n"
+				+ "<middleName>Shriram</middleName>\r\n"
+				+ "<id>1</id>\r\n"
+				+ "<department>IT</department>\r\n"
+				+ "<age>25</age>\r\n"
+				+ "<email>sameer.nikam@example.com</email>\r\n"
+				+ "<username>sameer123</username>";
+		
+		
+		JSONObject j = XML.toJSONObject(xml);
+		String json = j.toString();
+		return ResponseEntity.ok(json);
+	}
+	
+	
+	
+	
 }
